@@ -5,7 +5,7 @@ SEED_DIR ?= seed
 # PY lets local dev use the venv (make demo PY=./.venv/bin/python); Docker uses python3.
 PY ?= python3
 
-.PHONY: demo record verify trace eval replay probe-approval probe-agent-failure probe-budget \
+.PHONY: demo record verify trace eval replay test probe-approval probe-agent-failure probe-budget \
         probe-append-only probe-idempotency probe-crash clean
 
 # Full multi-agent pipeline, offline replay, on $(SEED_DIR). Writes out/package.json,
@@ -59,6 +59,10 @@ probe-idempotency:
 # BONUS. Exit 0 if the pipeline resumes from the last completed stage after a SIGKILL.
 probe-crash:
 	$(PY) -m cedx probe crash
+
+# Unit tests for the correctness cores (hashing, detectors, approval, verifier, …).
+test:
+	$(PY) -m pytest -q tests/
 
 clean:
 	rm -rf out
