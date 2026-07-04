@@ -15,6 +15,7 @@ import json
 import os
 import urllib.request
 
+from cedx.branding import MEMO_FIELDS, build_memo
 from cedx.config import Config
 from cedx.llm.replay import Replayer
 
@@ -78,33 +79,20 @@ def _fake(agent: str, request: dict) -> dict:
     if agent == "worker":
         rec = payload["record"]
         rid = rec.get("id")
+        firm = payload.get("brand", "Switchboard Capital")
         # ambiguous records → abstain (drives LOW_CONFIDENCE)
         ambiguous = _looks_ambiguous(rec)
-        # PROBE-ONLY: ids prefixed PROBE-HALLUC make the worker fabricate an amount
+        # PROBE-ONLY: ids prefixed PROBE-HALLUC make the worker fabricate a check_size
         # (not grounded in source) so probe-agent-failure can prove the Verifier catch.
         if str(rid).startswith("PROBE-HALLUC"):
-            content = {"delivered_fields": {
-                "package_id": rec["id"], "owner": rec["owner"],
-                "category": rec["category"],
-                "amount": (rec["amount"] or 0) + 999999,   # fabricated / unsupported
-                "deadline": rec["deadline"], "brand": payload.get("brand", "CEDX")},
-                "confidence": 0.95, "abstain": False}
+            memo = build_memo(rec, firm)
+            memo["check_size"] = (rec["amount"] or 0) + 999999   # fabricated / unsupported
+            content = {"delivered_fields": memo, "confidence": 0.95, "abstain": False}
         elif ambiguous:
             content = {"delivered_fields": {}, "confidence": 0.3, "abstain": True}
         else:
-            content = {
-                "delivered_fields": {
-                    "package_id": rec["id"],
-                    "owner": rec["owner"],
-                    "category": rec["category"],
-                    "amount": rec["amount"],
-                    "deadline": rec["deadline"],
-                    "brand": payload.get("brand", "CEDX"),
-                    "summary": f"{rec['category']} package for {rec['owner']} (amount {rec['amount']}).",
-                },
-                "confidence": 0.95,
-                "abstain": False,
-            }
+            content = {"delivered_fields": build_memo(rec, firm),
+                       "confidence": 0.95, "abstain": False}
         toks_out = 80
     elif agent == "verifier":
         rid = payload.get("source", {}).get("id")
@@ -133,8 +121,8 @@ def _fake_judge(payload: dict) -> dict:
         if out.get("abstain"):
             return {"score": 1.0 if _looks_ambiguous(src) else 0.0,
                     "reason": "abstain appropriate for ambiguity"}
-        grounded = all(str(df.get(k)) == str(src.get(k))
-                       for k in ("owner", "category", "amount", "deadline") if k in df)
+        grounded = all(str(df.get(k)) == str(src.get(src_attr))
+                       for k, src_attr in MEMO_FIELDS.items() if k in df)
         return {"score": 1.0 if grounded else 0.0,
                 "reason": "all fields grounded" if grounded else "ungrounded field"}
     if role == "verifier":

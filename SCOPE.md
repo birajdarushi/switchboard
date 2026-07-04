@@ -5,7 +5,7 @@
 
 - **Candidate name:** Rushiraj Birajdar
 - **CASE_ID (assigned live):** CEDX-2A3D34
-- **Industry chosen (from cedxsystems.com/workflows):** Invoice / AP financial operations
+- **Industry chosen (from cedxsystems.com/workflows):** Venture Capital Firms — IC-ready investment memo pipeline (branded "Switchboard Capital")
 - **Tier:** _<tier from the workflows page>_
 - **Stack / language:** Python 3.11 (pydantic, jsonschema, pypdf; stdlib urllib for LLM)
 

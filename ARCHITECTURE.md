@@ -67,6 +67,14 @@ worker delivered_fields --sha256--> delivered_fields_hash (on record AND transcr
 transcript.agent == "worker"   (proves the load-bearing call came from a worker)
 ```
 
+## The thin industry layer (`cedx/branding.py`)
+
+The architecture is domain-agnostic (the rubric rewards depth over domain). The **only**
+industry-specific code is `cedx/branding.py`: `MEMO_FIELDS` (which delivered memo field
+maps to which source attribute) + `build_memo()`. The Worker drafts with it, the Verifier
+grounds against it, and the eval judge scores against it — one source of truth. Switching
+lanes (or the live-extension "change the output" ask) is a one-file edit here.
+
 ## The 5 governed stages -> modules
 
 | Stage | Module(s) |

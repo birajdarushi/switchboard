@@ -6,10 +6,11 @@ delivers only clean + human-approved output, stays cheap, and is fully traceable
 replayable. One command runs it end-to-end offline.
 
 ## 1. Industry & Scope
-- **Industry:** Invoice / AP financial operations (records = work-requests with owner,
-  deadline, category, amount).
+- **Industry:** Venture Capital Firms — an IC-ready investment-memo pipeline (branded
+  "Switchboard Capital"). Each record is a deal: owner=deal lead, category=deal type,
+  amount=check size, deadline=IC date. Delivered output = a source-grounded memo draft.
 - **Tier:** see `SCOPE.md`.
-- **CASE_ID:** runtime env var (placeholder `CEDX-7F3A`); drives the amendment (§9).
+- **CASE_ID:** `CEDX-2A3D34` (runtime env var); drives the amendment (§9).
 - **Records that reach delivery:** all clean records + Class-B (SCHEMA_DRIFT REC-016,
   latest-version SUPERSEDED REC-017 v2). 15 delivered, 7 exceptions, 1 superseded on the dev seed.
 

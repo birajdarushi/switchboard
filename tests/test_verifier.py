@@ -2,6 +2,7 @@
 import tempfile
 
 from cedx.agents import verifier
+from cedx.branding import build_memo
 from cedx.contracts import (CanonicalRecord, SourceFormat, Tier, Verdict, VerifierIn,
                             WorkerOut)
 
@@ -10,6 +11,11 @@ def _src(amount=5000.0):
     return CanonicalRecord(id="R", owner="o", deadline="2026-07-15", category="C",
                            amount=amount, notes="", source_format=SourceFormat.feed,
                            source_version_hash="sha256:x")
+
+
+def _memo(s):
+    return build_memo({"id": s.id, "owner": s.owner, "category": s.category,
+                       "amount": s.amount, "deadline": s.deadline}, "Switchboard Capital")
 
 
 def _check(cfg_fake, source, delivered_fields):
@@ -23,16 +29,15 @@ def _check(cfg_fake, source, delivered_fields):
 
 def test_grounded_draft_passes(cfg_fake):
     s = _src()
-    df = {"owner": s.owner, "category": s.category, "amount": s.amount, "deadline": s.deadline}
-    out, sp = _check(cfg_fake, s, df)
+    out, sp = _check(cfg_fake, s, _memo(s))
     assert out.verdict == Verdict.passed
 
 
-def test_hallucinated_amount_overruled(cfg_fake):
+def test_hallucinated_check_size_overruled(cfg_fake):
     s = _src()
-    df = {"owner": s.owner, "category": s.category, "amount": s.amount + 999999,
-          "deadline": s.deadline}
+    df = _memo(s)
+    df["check_size"] = s.amount + 999999          # fabricated, not grounded in source
     out, sp = _check(cfg_fake, s, df)
     assert out.verdict == Verdict.fail
-    assert "amount" in out.overruled_fields
+    assert "check_size" in out.overruled_fields
     assert sp.status.value in {"overruled", "rejected"}

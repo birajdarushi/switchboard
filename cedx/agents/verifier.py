@@ -19,9 +19,8 @@ from cedx.llm.replay import Replayer, write_transcript
 _PROMPT = (Path(__file__).parent.parent / "prompts" / "verifier_v1.txt").read_text()
 PROMPT_VERSION = "verifier_v1"
 
-# delivered_field -> source attribute it must agree with
-_GROUNDED = {"owner": "owner", "category": "category", "amount": "amount",
-             "deadline": "deadline"}
+# delivered memo field -> source attribute it must agree with (single source of truth)
+from cedx.branding import MEMO_FIELDS as _GROUNDED
 
 
 def check(cfg: Config, vi: VerifierIn, tier: Tier, replayer: Replayer | None,
