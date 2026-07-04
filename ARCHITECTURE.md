@@ -1,5 +1,11 @@
 # ARCHITECTURE — CEDX Tiny Agent Fleet
 
+**Lane:** Venture Capital Firms — an IC-ready investment-memo pipeline ("Switchboard
+Capital"). Each record is a deal (owner = deal lead, category = deal type, amount =
+check size, deadline = IC date); the delivered output is a source-grounded memo draft.
+CASE_ID `CEDX-2A3D34` (amendment: risk_officer @ 54,000). The architecture below is
+domain-agnostic — only `cedx/branding.py` is VC-specific.
+
 ## Agent topology
 
 ```

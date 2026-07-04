@@ -34,11 +34,15 @@ docker compose up            # builds, runs `make demo && make verify`
 
 # or locally (Python 3.11+):
 pip install -r requirements.txt
-export CASE_ID=CEDX-7F3A
+export CASE_ID=CEDX-2A3D34
 make demo && make verify
 ```
 Writes `out/package.json`, `out/audit.json`, `out/exception_queue.json`.
 Regenerate transcripts: `make record` (offline dev) or `REPLAY_LLM=false LLM_API_KEY=... make record` (real).
+
+**Optional interactive dashboard** (`web/`, Next.js + Carbon; deploys to Vercel):
+visualizes the fleet and replays the run from `out/audit.json`. Regenerate its data with
+`make demo && python scripts/build_web_data.py`, then `cd web && pnpm install && pnpm dev`.
 
 ## 4. Controls (uniform probe CLI)
 | Command | Result |

@@ -1,7 +1,11 @@
 # DECISIONS
 
-**CASE_ID:** resolved at runtime from the `CASE_ID` env var (placeholder `CEDX-7F3A`
-during development). Role R and threshold T are computed from `sha256(CASE_ID)` — see §Amendment.
+**Lane:** Venture Capital Firms — an IC-ready investment-memo pipeline (branded
+"Switchboard Capital"). The architecture is domain-agnostic; the industry layer is
+isolated in `cedx/branding.py` (memo fields + their grounding to source attributes).
+
+**CASE_ID:** `CEDX-2A3D34`, resolved at runtime from the `CASE_ID` env var. Role R and
+threshold T are computed from `sha256(CASE_ID)` → **risk_officer @ 54,000** (see §Amendment).
 
 ## What I deliberately did NOT automate (and why)
 - **Final human approval.** The operator `approve/reject/request-changes/edit-resolve`
@@ -12,8 +16,9 @@ during development). Role R and threshold T are computed from `sha256(CASE_ID)` 
   second, *different* approver in role R (maker ≠ checker). We enforce the gate in code but
   never auto-satisfy both approvals with one actor.
 - **PDF OCR / arbitrary layouts.** Intake handles the seed's text-based PDFs (pypdf +
-  an ASCII85/Flate fallback). Scanned-image OCR is out of scope; such a record would fail
-  parsing and route to the exception queue rather than be silently dropped.
+  an ASCII85/Flate fallback). Scanned-image OCR is out of scope; a record whose file
+  can't be parsed still gets the **filename as its id** and routes to the exception queue
+  (as `MISSING_INPUT`) rather than being silently dropped or landing with a blank id.
 
 ## Outlier threshold (and why it generalizes)
 Robust z-score via **median + MAD** (`cedx/normalize/detectors.py`):

@@ -38,7 +38,7 @@ Version, Notes`.
 ## 3. Steps to run
 
 ```bash
-export CASE_ID=CEDX-7F3A                       # your live id at kickoff
+export CASE_ID=CEDX-2A3D34                      # your live-assigned id
 D=examples/mydata
 
 # (a) first time on NEW data: generate replay transcripts (offline, no key)
