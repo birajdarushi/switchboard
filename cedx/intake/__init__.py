@@ -24,7 +24,8 @@ class IntakeItem:
     schema_drift: bool
 
 
-def _to_canonical(raw: dict, source_format: SourceFormat, svh: str) -> IntakeItem:
+def _to_canonical(raw: dict, source_format: SourceFormat, svh: str,
+                  fallback_id: str = "") -> IntakeItem:
     canon_fields: dict = {}
     drift = False
     for k, v in raw.items():
@@ -50,8 +51,11 @@ def _to_canonical(raw: dict, source_format: SourceFormat, svh: str) -> IntakeIte
     except (TypeError, ValueError):
         version = 1
 
+    # If a source (esp. a corrupt/unparseable PDF/eml) yields no id, fall back to the
+    # filename so the record stays traceable in the exception queue instead of blank.
+    rec_id = str(canon_fields.get("id", "")).strip() or fallback_id
     rec = CanonicalRecord(
-        id=str(canon_fields.get("id", "")).strip(),
+        id=rec_id,
         version=version,
         owner=canon_fields.get("owner"),
         deadline=canon_fields.get("deadline"),
@@ -80,8 +84,10 @@ def load_records(seed_dir: str) -> list[IntakeItem]:
             raw_bytes = f.read_bytes()
             svh = sha_bytes(raw_bytes)
             if f.suffix == ".eml":
-                items.append(_to_canonical(eml_mod.parse(raw_bytes), SourceFormat.eml, svh))
+                items.append(_to_canonical(eml_mod.parse(raw_bytes), SourceFormat.eml, svh,
+                                           fallback_id=f.stem))
             elif f.suffix == ".pdf":
-                items.append(_to_canonical(pdf_mod.parse(raw_bytes), SourceFormat.pdf, svh))
+                items.append(_to_canonical(pdf_mod.parse(raw_bytes), SourceFormat.pdf, svh,
+                                           fallback_id=f.stem))
 
     return items

@@ -12,3 +12,6 @@ __pycache__/
 
 # private working notes — not for the public submission
 QA_LOG.md
+
+# macOS
+.DS_Store
