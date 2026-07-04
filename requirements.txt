@@ -1,0 +1,6 @@
+# CEDX Tiny Agent Fleet — Python deps.
+# Kept minimal: the grader runs on a network-restricted box, so no heavy/optional deps.
+jsonschema>=4.0     # verify_audit.py schema gate + our own validation
+pypdf>=4.0          # PDF intake (pure-python, no system libs)
+pydantic>=2.0       # typed agent contracts (cedx/contracts.py)
+pytest>=8.0         # eval + tests harness

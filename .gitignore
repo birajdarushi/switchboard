@@ -1,0 +1,14 @@
+# runtime + local only — NOT committed
+.venv/
+out/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# stray plugin skill bundles — not part of this project
+*.skill
+
+# NOTE: transcripts/ IS committed (needed for offline REPLAY_LLM=true).
+
+# private working notes — not for the public submission
+QA_LOG.md
