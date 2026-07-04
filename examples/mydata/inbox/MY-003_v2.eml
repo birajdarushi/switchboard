@@ -1,0 +1,12 @@
+From: intake@partner.example
+To: queue@cedxsystems.com
+Subject: Work request MY-003 (corrected)
+Content-Type: text/plain; charset=utf-8
+
+Id: MY-003
+Owner: carol
+Deadline: 2026-07-10
+Amount: 4990
+Category: REVIEW
+Version: 2
+Notes: Corrected figures (final). Supersedes v1.
