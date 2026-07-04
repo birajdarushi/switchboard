@@ -299,3 +299,11 @@
   @include type.type-style('productive-heading-05');
   margin: 0;
 }
+
+/* vertical spacing between stacked tiles (Carbon columns don't add row gap) */
+.stagesTile,
+.agentsTile,
+.dataTile,
+.traceTile {
+  margin-bottom: spacing.$spacing-05;
+}
